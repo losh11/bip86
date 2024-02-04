@@ -1,6 +1,4 @@
-const { networks } = require('bitcoinjs-lib')
 const bip39 = require('bip39')
-const bitcoinNetworks = { mainnet: networks.bitcoin, testnet: networks.testnet }
 const { BIP32Factory } = require('bip32')
 const ecurve = require('ecurve')
 const secp256k1 = ecurve.getCurveByName('secp256k1')
@@ -9,6 +7,7 @@ const bech32 = require('bech32').bech32
 const bech32m = require('bech32').bech32m
 const ecc = require('tiny-secp256k1');
 const bip32 = BIP32Factory(ecc);
+const litecoinNetworks = require('./networks')
 
 /**
  * Constructor
@@ -23,8 +22,8 @@ const bip32 = BIP32Factory(ecc);
 function fromMnemonic(mnemonic, password = '', isTestnet, coinType, network) {
   this.seed = bip39.mnemonicToSeedSync(mnemonic, password)
   this.isTestnet = isTestnet === true
-  this.coinType = this.isTestnet ? 1 : coinType ? coinType : 0 // 0 is for Bitcoin and 1 is testnet for all coins
-  this.network = network || this.isTestnet ? bitcoinNetworks.testnet : bitcoinNetworks.mainnet
+  this.coinType = this.isTestnet ? 1 : coinType ? coinType : 2 // 2 is for LTC Mainnet and 1 is testnet for all coins
+  this.network = network || this.isTestnet ? litecoinNetworks.testnet : litecoinNetworks.mainnet
 }
 
 /**
@@ -64,31 +63,14 @@ fromMnemonic.prototype.deriveAccount = function (number, changePurpose) {
 /**
  * Constructor
  * Create key pairs from a private master key of mainnet and testnet.
- * @param {string} xprv/tprv
+ * @param {string} xprv
  * @param {object} networks
+ * @param {boolean} isTestnet
  */
-function fromXPrv(xprv, networks) {
-  this.networks = networks || bitcoinNetworks
+function fromXPrv(xprv, networks, isTestnet) {
+  this.networks = networks || litecoinNetworks
   this.xprv = xprv
-  this.getNetwork(xprv)
-}
-
-fromXPrv.prototype.getNetwork = function (xprv) {
-  let key = xprv.slice(0, 4)
-
-  if (key !== 'xprv' && key !== 'tprv') {
-    throw new Error('prefix is not supported')
-  }
-
-  if (key === 'xprv') {
-    this.network = this.networks.mainnet
-    this.isTestnet = false
-  }
-
-  if (key === 'tprv') {
-    this.network = this.networks.testnet
-    this.isTestnet = true
-  }
+  this.isTestnet = isTestnet === true
 }
 
 /**
@@ -157,28 +139,10 @@ fromXPrv.prototype.getAddress = function (index, isChange, purpose) {
  * @param {string} xpub/tpub
  * @param {object} networks
  */
-function fromXPub(xpub, networks) {
-  this.networks = networks || bitcoinNetworks
+function fromXPub(xpub, networks, isTestnet) {
+  this.networks = networks || litecoinNetworks
   this.xpub = xpub
-  this.getNetwork(xpub)
-}
-
-fromXPub.prototype.getNetwork = function (xpub) {
-  let key = xpub.slice(0, 4)
-
-  if (key !== 'xpub' && key !== 'tpub') {
-    throw new Error('prefix is not supported')
-  }
-
-  if (key === 'xpub') {
-    this.network = this.networks.mainnet
-    this.isTestnet = false
-  }
-
-  if (key === 'tpub') {
-    this.network = this.networks.testnet
-    this.isTestnet = true
-  }
+  this.isTestnet = isTestnet === true
 }
 
 /**
@@ -223,7 +187,7 @@ const getP2TRAddress = (pubkey, testnet = false) => {
   const taprootPubkey = schnorr.taproot.taprootConstruct(pubKey)
   const words = bech32.toWords(taprootPubkey)
   words.unshift(1)
-  return bech32m.encode(testnet ? 'tb' : 'bc', words)
+  return bech32m.encode(testnet ? 'tltc' : 'ltc', words)
 }
 
 module.exports = {
