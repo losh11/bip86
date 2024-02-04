@@ -67,8 +67,8 @@ fromMnemonic.prototype.deriveAccount = function (number, changePurpose) {
  * @param {object} networks
  * @param {boolean} isTestnet
  */
-function fromXPrv(xprv, networks, isTestnet) {
-  this.networks = networks || litecoinNetworks
+function fromXPrv(xprv, isTestnet) {
+  this.networks = isTestnet ? litecoinNetworks.testnet : litecoinNetworks.mainnet
   this.xprv = xprv
   this.isTestnet = isTestnet === true
 }
@@ -139,8 +139,8 @@ fromXPrv.prototype.getAddress = function (index, isChange, purpose) {
  * @param {string} xpub/tpub
  * @param {object} networks
  */
-function fromXPub(xpub, networks, isTestnet) {
-  this.networks = networks || litecoinNetworks
+function fromXPub(xpub, isTestnet) {
+  this.networks = isTestnet ? litecoinNetworks.testnet : litecoinNetworks.mainnet
   this.xpub = xpub
   this.isTestnet = isTestnet === true
 }
@@ -195,5 +195,6 @@ module.exports = {
   entropyToMnemonic: bip39.entropyToMnemonic,
   fromMnemonic,
   fromXPrv,
-  fromXPub
+  fromXPub,
+  networks: litecoinNetworks.default
 }
