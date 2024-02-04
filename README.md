@@ -1,10 +1,12 @@
-# BIP86
+# BIP86-ltc
 
-Derives taproot addresses from seed, xprv/xpub and tprv/tpub in javascript
+Derives taproot addresses from seed, xprv/xpub in javascript for Litecoin.
+Presumes coinType 2 for litecoin mainnet, coinType 1 for all testnets.
+Uses xpub/xprv bip32 prefixes. Not compatible with SLIP132.
 
 ## Installing
 
-Run - `npm install bip86 --save`
+Run - `npm install bip86-ltc --save`
 
 ## Using
 
@@ -22,30 +24,30 @@ console.log('\n');
 
 var account0 = new BIP86.fromXPrv(child0)
 
-console.log("Account 0, root = m/86'/0'/0'");
+console.log("Account 0, root = m/86'/2'/0'");
 console.log('Account 0 xprv:', account0.getAccountPrivateKey())
 console.log('Account 0 xpub:', account0.getAccountPublicKey())
 console.log('\n');
 
-console.log("Account 0, first receiving address = m/86'/0'/0'/0/0");
+console.log("Account 0, first receiving address = m/86'/2'/0'/0/0");
 console.log('Prvkey:', account0.getPrivateKey(0))
 console.log('Pubkey:', account0.getPublicKey(0))
 console.log('Address:', account0.getAddress(0))
 console.log('\n');
 
-console.log("Account 0, second receiving address = m/86'/0'/0'/0/1");
+console.log("Account 0, second receiving address = m/86'/2'/0'/0/1");
 console.log('Prvkey:', account0.getPrivateKey(1))
 console.log('Pubkey:', account0.getPublicKey(1))
 console.log('Address:', account0.getAddress(1))
 console.log('\n');
 
-console.log("Account 0, first change address = m/86'/0'/0'/1/0");
+console.log("Account 0, first change address = m/86'/2'/0'/1/0");
 console.log('Prvkey:', account0.getPrivateKey(0, true))
 console.log('Pubkey:', account0.getPublicKey(0, true))
 console.log('Address:', account0.getAddress(0, true))
 console.log('\n');
 
-var xpub = 'tpubDE9d2eQdaQrwREoNYVm63BH1TQz5XYizB3rMxeJpFsfxxzXzNGCrguxaip9shs9TLahkfvgQPNWdKXvWqCqWgKk5SxT9wuFtLQg7RQvRsTV'
+var xpub = 'xprv9s21ZrQH143K3GJpoapnV8SFfukcVBSfeCficPSGfubmSFDxo1kuHnLisriDvSnRRuL2Qrg5ggqHKNVpxR86QEC8w35uxmGoggxtQTPvfUu'
 var account1 = new BIP86.fromXPub(xpub)
 
 console.log("Account 1, root = m/86'/1'/0'");

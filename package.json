@@ -1,17 +1,17 @@
 {
-  "name": "bip86",
+  "name": "bip86-ltc",
   "version": "0.0.3",
-  "description": "BIP86 - Derives taproot addresses from seed, xprv/xpub and tprv/tpub in javascript",
+  "description": "BIP86-ltc - Derives taproot addresses from seed, xprv/xpub in javascript for Litecoin",
   "main": "./src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Anderson-Juhasc/bip86"
+    "url": "https://github.com/losh11/bip86"
   },
   "scripts": {
     "test": "jest"
   },
   "keywords": [
-    "bitcoin",
+    "litecoin",
     "bip86",
     "taproot",
     "p2tr"
